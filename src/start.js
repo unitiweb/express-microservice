@@ -21,7 +21,6 @@ module.exports = (cfg) => {
   // Add the data function to the response
   app.use((req, res, next) => {
     res.data = (data) => {
-      console.log('data', data);
       res.json({ data })
     }
     next()
