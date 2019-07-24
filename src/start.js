@@ -5,6 +5,7 @@ module.exports = () => {
   const config = require('./config')
   const endpoints = require('./endpoint')
   const context = require('./context')
+  const error = require('./error')
 
   // require the express and dependencies
   const express = require('express')
@@ -17,8 +18,8 @@ module.exports = () => {
 
   // Add the res.data to the response object to wrap resopnse with data
   app.use((req, res, next) => {
-    res.data = data => res.json({ data })
-    res.error = (error, data) => res.json(error(data))
+    res.data = (data) => res.json({ data })
+    res.error = (code, data) => res.json(error.get(code, data))
     next()
   })
 
