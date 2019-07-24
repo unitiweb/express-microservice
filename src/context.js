@@ -12,6 +12,10 @@ const path = (module) => {
 module.exports = {
   list: context,
   add: (name, module) => {
-    context[name] = require(path(module))
+    if (typeof module === 'string') {
+      context[name] = require(path(module))
+    } else {
+      context[name] = module
+    }
   }
 }
