@@ -1,0 +1,27 @@
+{
+  "name": "express-microservice",
+  "version": "0.1.0",
+  "description": "A simple microservice framework using express",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/unitiweb/express-microservice.git"
+  },
+  "keywords": [
+    "express",
+    "microservice",
+    "framework"
+  ],
+  "author": "Dave Torres <dave@unitiweb.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/unitiweb/express-microservice/issues"
+  },
+  "homepage": "https://github.com/unitiweb/express-microservice#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
