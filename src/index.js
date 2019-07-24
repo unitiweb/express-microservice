@@ -3,6 +3,6 @@ module.exports = {
   config: require('./config'),
   context: require('./context'),
   endpoint: require('./endpoint'),
-  error: require('./errors'),
+  error: require('./error'),
   start: require('./start'),
 }
