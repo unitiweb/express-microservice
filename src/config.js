@@ -1,6 +1,12 @@
 const defaultBasePath = require.main.path
 
 const config = {
+  paths: {
+    errors: null,
+    context: null,
+    endpoints: null,
+    validators: null
+  },
   name: 'microservice',
   port: '4200',
   host: 'localhost',

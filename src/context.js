@@ -1,6 +1,6 @@
 const config = require('./config')
 
-const context = {}
+const list = {}
 
 const load = (module) => {
   if (typeof module === 'string') {
@@ -12,10 +12,17 @@ const load = (module) => {
   return module
 }
 
+const build = () => {
+  const ctx = {}
+  for (const key in list) {
+    ctx[key] = load(list[key])
+  }
+  return ctx
+}
+
 module.exports = {
-  list: context,
-  load,
+  build,
   add: (name, module) => {
-    context[name] = module
+    list[name] = module
   }
 }

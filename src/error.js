@@ -1,7 +1,14 @@
 
 const errors = {}
-const add = (status, code, message) => {
+
+const add = (status, code, message, formatter = null) => {
   errors[code] = (data) => {
+    if (formatter) {
+      const formatted = formatter(data)
+      if (formatted.status) status = formatted.status
+      if (formatted.code) code = formatted.code
+      if (formatted.message) message = formatted.message
+    }
     const timeThrown = new Date().toISOString()
     return {
       error: {
@@ -15,7 +22,19 @@ const add = (status, code, message) => {
   }
 }
 
+add(
+  422,
+  'INPUT_VALIDATION_ERROR',
+  'There were validation errors'
+)
+
 module.exports = {
   list: errors,
-  add
+  add,
+  get: (error, data) => {
+    if (errors.hasOwnProperty(error)) {
+      return errors[error](data)
+    }
+    throw new Error(`The supplied error ${error} does not exist`)
+  }
 }
