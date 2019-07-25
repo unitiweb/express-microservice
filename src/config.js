@@ -1,4 +1,5 @@
 const defaultBasePath = require.main.path
+console.log('defaultBasePath', defaultBasePath)
 
 const config = {
   paths: {
