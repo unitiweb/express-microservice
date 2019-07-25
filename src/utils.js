@@ -55,10 +55,11 @@ const logRoutes = (app) => {
   if (config.get('showRoutes') === true) {
     const routes = getEndpointsList(app)
     routes.forEach(route => {
-      let method = 'GET '
-      if (route.methods.post) method = 'POST'
-      if (route.methods.put) method = 'PUT'
-      if (route.methods.delete) method = 'DELETE'
+      let method = 'ANY'
+      if (route.methods.post) method = 'GET'
+      else if (route.methods.post) method = 'POST'
+      else if (route.methods.put) method = 'PUT'
+      else if (route.methods.delete) method = 'DELETE'
       console.log(`|--> ${method} : ${route.path}`)
     })
   }

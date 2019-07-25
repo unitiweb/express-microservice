@@ -8,15 +8,6 @@ const load = (module) => {
 
 const build = (app, ctx) => {
 
-  // Add a catch all endpoint if an endpoint doesn't exist
-  add(
-    'all',
-    '*',
-    (res) => {
-        res.error('ENDPOINT_NOT_FOUND')
-    }
-  )
-
   list.forEach(endpoint => {
     let module = endpoint.module
     if (typeof module === 'string') {
