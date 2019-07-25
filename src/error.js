@@ -28,6 +28,12 @@ add(
   'There were validation errors'
 )
 
+add(
+  404,
+  'ENDPOINT_NOT_FOUND',
+  'The specified endpoint does not exist'
+)
+
 module.exports = {
   list: errors,
   add,

@@ -1,6 +1,5 @@
 const config = require('./config')
 const validators = require('./validator')
-
 const list = [];
 
 const load = (module) => {
@@ -8,6 +7,16 @@ const load = (module) => {
 }
 
 const build = (app, ctx) => {
+
+  // Add a catch all endpoint if an endpoint doesn't exist
+  add(
+    'all',
+    '*',
+    (res) => {
+        res.error('ENDPOINT_NOT_FOUND')
+    }
+  )
+
   list.forEach(endpoint => {
     let module = endpoint.module
     if (typeof module === 'string') {
@@ -35,15 +44,23 @@ const build = (app, ctx) => {
       module(res, req.body, ctx)
     })
   })
+
+  app.all('*', (req, res) => {
+    res.error('ENDPOINT_NOT_FOUND')
+  })
+}
+
+const add = (method, path, module) => {
+  list.push({ method, path, module: module })
+}
+
+const get = (module) => {
+  return list.find(item => item.module === module)
 }
 
 module.exports = {
   list,
   build,
-  add: (method, path, module) => {
-    list.push({ method, path, module: module })
-  },
-  get: (module) => {
-    return list.find(item => item.module === module)
-  }
+  add,
+  get
 }
