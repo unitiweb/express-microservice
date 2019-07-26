@@ -1,33 +1,36 @@
-const list = {}
-const formatters = {}
 
-module.exports = {
+class Validators {
 
-  list,
+  constructor () {
+    this.list = {}
+    this.formatters = {}
+  }
 
-  add: (endpointModule, closure) => {
+  add (endpointModule, closure) {
     if (Array.isArray(endpointModule)) {
       endpointModule.forEach(module => {
-        list[module] = closure
+        this.list[module] = closure
       })
     } else {
-      list[endpointModule] = closure
+      this.list[endpointModule] = closure
     }
-  },
+  }
 
-  get: (endpointModule) => {
-    if (list.hasOwnProperty(endpointModule)) {
-      return list[endpointModule]
+  getValidator (endpointModule) {
+    if (this.list.hasOwnProperty(endpointModule)) {
+      return this.list[endpointModule]
     }
     return null;
-  },
+  }
 
-  addFormatter: (name, closure) => {
-    formatters[name] = closure
-  },
+  addFormatter (name, closure) {
+    this.formatters[name] = closure
+  }
 
-  getFormatter: (name = 'default') => {
-    return formatters[name]
+  getFormatter (name = 'default') {
+    return this.formatters[name]
   }
 
 }
+
+module.exports = new Validators()

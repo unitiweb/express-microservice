@@ -1,57 +1,21 @@
-const config = require('./config')
-const validators = require('./validator')
-const list = [];
+const utils = require('./utils')
 
-const load = (module) => {
-  return require(`${config.get('endpoints')}/${module}`)
-}
+class Endpoints {
 
-const build = (app, ctx) => {
+  constructor() {
+    this.list = []
+  }
 
-  list.forEach(endpoint => {
-    let module = endpoint.module
-    if (typeof module === 'string') {
-      module = load(module)
+  add (method, path, moduleName, module = null) {
+    if (module === null) {
+      module = utils.requireEndpoint(moduleName)
     }
-    app[endpoint.method](endpoint.path, (req, res, next) => {
+    this.list.push({ method, path, moduleName, module })
+  }
 
-      const validator = validators.get(endpoint.module)
-      if (!validator) {
-        return next()
-      }
-
-      let valid = validator(req.body)
-      if (valid !== true) {
-        const formatter = validators.getFormatter()
-        if (formatter) {
-          valid = formatter(valid)
-        }
-        return res.error('INPUT_VALIDATION_ERROR', valid)
-      }
-
-      next()
-    }, (req, res) => {
-      // Inject the res, req.body, and context then run the module
-      module(res, req.body, ctx)
-    })
-  })
-
-  app.all('*', (req, res) => {
-    res.error('ENDPOINT_NOT_FOUND')
-  })
+  get (moduleName) {
+    return this.list.find(item => item.moduleName === moduleName)
+  }
 }
 
-const add = (method, path, module) => {
-  list.push({ method, path, module: module })
-}
-
-const get = (module) => {
-  return list.find(item => item.module === module)
-}
-
-module.exports = {
-  list,
-  build,
-  add,
-  get
-}
+module.exports = new Endpoints()

@@ -1,37 +1,55 @@
-const defaultBasePath = require.main.path
-console.log('defaultBasePath', defaultBasePath)
 
-const config = {
-  paths: {
-    errors: null,
-    context: null,
-    endpoints: null,
-    validators: null
-  },
-  name: 'microservice',
-  port: '4200',
-  host: 'localhost',
-  endpoints: `${defaultBasePath}/endpoints`,
-  basePath: defaultBasePath,
-  showRoutes: false,
-  showBanner: true
-}
+class Config {
 
-module.exports = {
+  constructor () {
+    const defaultBasePath = require.main.path
+    this.data = {
+      name: 'microservice',
+      port: 80,
+      host: 'localhost',
+      endpoints: `${defaultBasePath}/endpoints`,
+      basePath: defaultBasePath,
+      showRoutes: false,
+      showBanner: true
+    }
+  }
 
-  init: (cfg) => {
+  init (cfg) {
     for (const key in cfg) {
-      if (cfg.hasOwnProperty(key) && config.hasOwnProperty(key)) {
-        config[key] = cfg[key]
+      if (cfg.hasOwnProperty(key) && this.data.hasOwnProperty(key)) {
+        this.data[key] = cfg[key]
       }
     }
-  },
+  }
 
-  get: (key) => {
-    if (config.hasOwnProperty(key)) {
-      return config[key]
+  name (name) { this.set(name) }
+  port (port) { this.set(port) }
+  host (host) { this.set(host) }
+  endpoints (endpoints) { this.set(endpoints) }
+  basePath (basePath) { this.set(basePath) }
+  showRoutes (showRoutes) { this.set(showRoutes) }
+  showBanner (showBanner) { this.set(showBanner) }
+
+  exists (name) {
+    if (this.data.hasOwnProperty(name)) {
+      return true
+    } else {
+      throw new Error('The supplied config variable does not exist')
     }
-    throw new Error(`The configuration key '${key}' does not exist`)
+  }
+
+  set (key, value) {
+    if (this.exists(key)) {
+      this.data[key] = value
+    }
+  }
+
+  get (key) {
+    if (this.exists(key)) {
+      return this.data[key]
+    }
   }
 
 }
+
+module.exports = new Config()

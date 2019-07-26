@@ -2,13 +2,23 @@ const config = require('./config')
 const errors = require('./error')
 
 const requireFile = (path) => {
-  if (path) {
+  if (typeof path === 'string') {
+    let module = null
     if (path.substr(0, 1) === '.') {
-      require(config.get('basePath') + '/' + path)
+      module = require(config.get('basePath') + '/' + path)
     } else {
-      require(path)
+      module = require(path)
     }
+    return module
   }
+  return path
+}
+
+const requireEndpoint = (path) => {
+  if (typeof path === 'string') {
+    return require(config.get('endpoints') + '/' + path)
+  }
+  return path
 }
 
 const addDataMiddleware = (req, res, next) => {
@@ -29,9 +39,9 @@ const addErrorMiddleware = (req, res, next) => {
 const getEndpointsList = (app) => {
   const routes = [];
   app._router.stack.forEach(function(expressRoute){
-    if(expressRoute.route){ // routes registered directly on the app
+    if(expressRoute.route) {
       routes.push(expressRoute.route);
-    } else if(expressRoute.name === 'router'){ // router expressRoute
+    } else if(expressRoute.name === 'router') {
       expressRoute.handle.stack.forEach(function(handler){
         const route = handler.route;
         route && routes.push(route);
@@ -56,7 +66,7 @@ const logRoutes = (app) => {
     const routes = getEndpointsList(app)
     routes.forEach(route => {
       let method = 'ANY'
-      if (route.methods.post) method = 'GET'
+      if (route.methods.get) method = 'GET'
       else if (route.methods.post) method = 'POST'
       else if (route.methods.put) method = 'PUT'
       else if (route.methods.delete) method = 'DELETE'
@@ -80,6 +90,7 @@ const logStatus = (app) => {
 
 module.exports = {
   requireFile,
+  requireEndpoint,
   addDataMiddleware,
   addErrorMiddleware,
   getEndpointsList,

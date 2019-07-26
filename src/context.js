@@ -1,28 +1,23 @@
-const config = require('./config')
+const utils = require('./utils')
 
-const list = {}
+class Context {
 
-const load = (module) => {
-  if (typeof module === 'string') {
-    if (module.substr(0, 2) === './') {
-      return require(`${config.get('basePath')}/${module.substr(2)}`)
-    }
-    return require(module)
+  constructor () {
+    this.list = []
   }
-  return module
+
+  add (name, module) {
+    this.list.push({ name, module })
+  }
+
+  build () {
+    const context = {}
+    this.list.forEach(ctx => {
+      context[ctx.name] = utils.requireFile(ctx.module)
+    })
+    return context
+  }
+
 }
 
-const build = () => {
-  const ctx = {}
-  for (const key in list) {
-    ctx[key] = load(list[key])
-  }
-  return ctx
-}
-
-module.exports = {
-  build,
-  add: (name, module) => {
-    list[name] = module
-  }
-}
+module.exports = new Context
