@@ -6,15 +6,34 @@ class Endpoints {
     this.list = []
   }
 
-  add (method, path, moduleName, module = null) {
-    if (module === null) {
-      module = utils.requireEndpoint(moduleName)
+  add (method, path, module) {
+    if (path.substr(0, 1) === '/') {
+      path = path.substr(1)
     }
-    this.list.push({ method, path, moduleName, module })
+    if (typeof module === 'string') {
+      module = utils.requireEndpoint(module)
+    }
+    this.list.push({ method, path, module })
   }
 
-  get (moduleName) {
-    return this.list.find(item => item.moduleName === moduleName)
+  get (path, module) {
+    this.add('get', path, module)
+  }
+
+  post (path, module) {
+    this.add('post', path, module)
+  }
+
+  put (path, module) {
+    this.add('put', path, module)
+  }
+
+  patch (path, module) {
+    this.add('patch', path, module)
+  }
+
+  delete (path, module) {
+    this.add('delete', path, module)
   }
 }
 

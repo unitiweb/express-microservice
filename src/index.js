@@ -1,5 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
+const importModules = require('import-modules')
+const fs = require('fs')
 
 const utils = require('./utils')
 const config = require('./config')
@@ -12,15 +14,19 @@ const errors = require('./error')
 class Service {
 
   constructor () {
+    this.app = this.express()
     this.cfg = config
-    this.endpoints = endpoints
-    this.context = context
-    this.validators = validators
-    this.errors = errors
-    this.app = Service.express()
+    this.Endpoint = endpoints
+    this.Context = context
+    this.Error = errors
+    this.Validator = validators
   }
 
-  static express () {
+  config (cfg) {
+    this.cfg.init(cfg)
+  }
+
+  express () {
     const app = express()
     app.use(bodyParser.urlencoded({ extended: false }))
     app.use(bodyParser.json())
@@ -29,51 +35,61 @@ class Service {
     return app
   }
 
-  config (cfg) {
-    this.cfg.init(cfg)
-  }
+  loadEndpoints (ctx) {
 
-  loadEndpoints () {
-    this.endpoints.list.forEach(endpoint => {
-      if (endpoint.module === null) {
-        endpoint.module = this.endpoints.get(endpoint.moduleName)
-      }
-      this.app[endpoint.method](endpoint.path, (req, res, next) => {
-        const validator = this.validators.getValidator(endpoint.moduleName)
-        if (validator !== null) {
-          let valid = validator(req.body)
-          if (valid !== true) {
-            const formatter = this.validators.getFormatter()
-            if (formatter) {
-              valid = formatter(valid)
-            }
-            return res.error('INPUT_VALIDATION_ERROR', valid)
-          }
+    // Require all the endpoints from directory
+    if (this.cfg.endpoints()) {
+      importModules(this.cfg.endpoints());
+    }
+
+    this.Endpoint.list.forEach(endpoint => {
+      this.app[endpoint.method]('/' + endpoint.path, (req, res, next) => {
+        if (this.Validator.isValid(endpoint.path, req.body, ctx) === false) {
+          return res.error('INPUT_VALIDATION_ERROR', this.Validator.getError())
         }
         next()
       }, (req, res) => {
-        endpoint.module(res, req.body, this.context.build())
+        endpoint.module(res, req.body, ctx)
       })
     })
   }
 
+  loadFileIfExists(path) {
+    if (fs.existsSync(path)) {
+      require(path)
+    }
+  }
+
   listen () {
+
+    // Load context, validators, and errors
+    this.loadFileIfExists(this.cfg.context())
+
+    // Build the context object
+    const ctx = this.Context.build()
+
+    this.loadFileIfExists(this.cfg.validators())
+    this.loadFileIfExists(this.cfg.errors())
+
     // Add error used with validations
-    this.errors.add(
+    errors.add(
       422,
       'INPUT_VALIDATION_ERROR',
       'There were validation errors'
     )
 
     // Add error used if endpoint can not be found
-    this.errors.add(
+    errors.add(
       404,
       'ENDPOINT_NOT_FOUND',
       'The specified endpoint does not exist'
     )
 
-    this.loadEndpoints()
-    this.app.listen(config.get('port'), () => {
+    // Load the endpoints
+    this.loadEndpoints(ctx)
+
+    // Start listening for requests
+    this.app.listen(this.cfg.get('port'), () => {
       utils.logStatus(this.app)
     })
   }

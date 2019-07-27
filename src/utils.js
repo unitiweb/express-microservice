@@ -1,5 +1,4 @@
 const config = require('./config')
-const errors = require('./error')
 
 const requireFile = (path) => {
   if (typeof path === 'string') {
@@ -16,24 +15,9 @@ const requireFile = (path) => {
 
 const requireEndpoint = (path) => {
   if (typeof path === 'string') {
-    return require(config.get('endpoints') + '/' + path)
+    return require(config.endpoints(path))
   }
   return path
-}
-
-const addDataMiddleware = (req, res, next) => {
-  res.data = (data) => {
-    res.json({ data })
-  }
-  next()
-}
-
-const addErrorMiddleware = (req, res, next) => {
-  res.error = (error, data) => {
-    const err = errors.get(error, data)
-    return res.status(err.error.status).json(err)
-  }
-  next()
 }
 
 const getEndpointsList = (app) => {
@@ -91,8 +75,6 @@ const logStatus = (app) => {
 module.exports = {
   requireFile,
   requireEndpoint,
-  addDataMiddleware,
-  addErrorMiddleware,
   getEndpointsList,
   logStatus
 }

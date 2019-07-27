@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/unitiweb/express-microservice#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "import-modules": "^1.1.0"
   }
 }

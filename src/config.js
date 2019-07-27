@@ -1,3 +1,4 @@
+const path = require('path')
 
 class Config {
 
@@ -7,8 +8,11 @@ class Config {
       name: 'microservice',
       port: 80,
       host: 'localhost',
-      endpoints: `${defaultBasePath}/endpoints`,
       basePath: defaultBasePath,
+      endpoints: null,
+      context: null,
+      errors: null,
+      validators: null,
       showRoutes: false,
       showBanner: true
     }
@@ -22,13 +26,37 @@ class Config {
     }
   }
 
-  name (name) { this.set(name) }
-  port (port) { this.set(port) }
-  host (host) { this.set(host) }
-  endpoints (endpoints) { this.set(endpoints) }
-  basePath (basePath) { this.set(basePath) }
-  showRoutes (showRoutes) { this.set(showRoutes) }
-  showBanner (showBanner) { this.set(showBanner) }
+  makePath (pathString, file = '') {
+    return path.join(this.data.basePath, pathString, file)
+  }
+
+  endpoints (file) {
+    if (this.data.endpoints === null) {
+      this.data.endpoints = 'endpoints'
+    }
+    return this.makePath(this.data.endpoints, file)
+  }
+
+  context () {
+    if (this.data.context === null) {
+      this.data.context = 'context.js'
+    }
+    return this.makePath(this.data.context)
+  }
+
+  errors () {
+    if (this.data.errors === null) {
+      this.data.errors = 'errors.js'
+    }
+    return this.makePath(this.data.errors)
+  }
+
+  validators () {
+    if (this.data.validators === null) {
+      this.data.validators = 'validators.js'
+    }
+    return this.makePath(this.data.validators)
+  }
 
   exists (name) {
     if (this.data.hasOwnProperty(name)) {

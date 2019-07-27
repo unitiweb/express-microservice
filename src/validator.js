@@ -4,21 +4,22 @@ class Validators {
   constructor () {
     this.list = {}
     this.formatters = {}
+    this.error = null
   }
 
-  add (endpointModule, closure) {
-    if (Array.isArray(endpointModule)) {
-      endpointModule.forEach(module => {
+  add (endpointPath, closure) {
+    if (Array.isArray(endpointPath)) {
+      endpointPath.forEach(module => {
         this.list[module] = closure
       })
     } else {
-      this.list[endpointModule] = closure
+      this.list[endpointPath] = closure
     }
   }
 
-  getValidator (endpointModule) {
-    if (this.list.hasOwnProperty(endpointModule)) {
-      return this.list[endpointModule]
+  getValidator (endpointPath) {
+    if (this.list.hasOwnProperty(endpointPath)) {
+      return this.list[endpointPath]
     }
     return null;
   }
@@ -29,6 +30,29 @@ class Validators {
 
   getFormatter (name = 'default') {
     return this.formatters[name]
+  }
+
+  getError () {
+    return this.error
+  }
+
+  isValid (path, data, context) {
+    this.error = null
+    const validator = this.getValidator(path)
+    if (validator === null) {
+      return true
+    }
+
+    let valid = validator(data, context)
+    if (valid !== true) {
+      const formatter = this.getFormatter()
+      if (formatter) {
+        valid = formatter(valid)
+      }
+      this.error = valid
+      return false
+    }
+    return true
   }
 
 }
