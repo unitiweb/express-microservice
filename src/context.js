@@ -11,7 +11,6 @@ class Context {
   }
 
   build () {
-    console.log('this.list', this.list)
     const context = {}
     this.list.forEach(ctx => {
       context[ctx.name] = utils.requireFile(ctx.module)
