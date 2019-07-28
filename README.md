@@ -194,31 +194,6 @@ Endpoint.get(
 
 Notice the `res.data` method. This is used to return an object that will be converted to json and send to the browser.
 
-**Sample index.js Setup**
-
-```js
-// Require any outside dependencies
-require('dotenv-flow').config()
-
-// Require the service
-const service = require('./service')
-
-// Configuration Settings
-service.config.name = 'user'
-service.config.port = process.env.PORT
-service.config.host = process.env.HOST
-service.config.basePath = __dirname
-service.config.showRoutes = true
-service.config.showBanner = true
-
-// Add modules to the context
-service.context.add('models', './models')
-service.context.add('errors', './errors')
-
-// Add the endpoints (see the sample endpoint below)
-service.endpoint.add('get', '/health-check', './endpoints/healthCheck')
-```
-
 ### Example
 
-See the `example` folder for examples of use.
+See the `examples` folder for usage examples.
