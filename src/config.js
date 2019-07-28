@@ -27,9 +27,6 @@ class Config {
   }
 
   makePath (pathString, file = '') {
-    console.log('pathString', pathString)
-    console.log('file', file)
-    console.log('require.main.path', require.main.path);
     return path.join(this.data.basePath, pathString, file)
   }
 
