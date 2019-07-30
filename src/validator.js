@@ -1,3 +1,5 @@
+const config = require('./config')
+const utils = require('./utils')
 
 class Validators {
 
@@ -53,6 +55,10 @@ class Validators {
       return false
     }
     return true
+  }
+
+  build () {
+    utils.loadFileIfExists(config.validators())
   }
 
 }

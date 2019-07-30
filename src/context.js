@@ -1,4 +1,5 @@
 const utils = require('./utils')
+const config = require('./config')
 
 class Context {
 
@@ -11,6 +12,9 @@ class Context {
   }
 
   build () {
+    // Load the context file
+    utils.loadFileIfExists(config.context())
+    // Add configured context libraries to context object
     const context = {}
     this.list.forEach(ctx => {
       context[ctx.name] = utils.requireFile(ctx.module)

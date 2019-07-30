@@ -1,4 +1,5 @@
 const config = require('./config')
+const fs = require('fs')
 
 const requireFile = (path) => {
   if (typeof path === 'string') {
@@ -72,9 +73,16 @@ const logStatus = (app) => {
   }
 }
 
+const loadFileIfExists = (path) => {
+  if (fs.existsSync(path)) {
+    require(path)
+  }
+}
+
 module.exports = {
   requireFile,
   requireEndpoint,
   getEndpointsList,
-  logStatus
+  logStatus,
+  loadFileIfExists
 }

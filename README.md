@@ -1,4 +1,4 @@
-# express-microservice
+# unitiweb-express-microservice
 
 A simple microservice framework using express.
 
@@ -15,7 +15,7 @@ npm install express-microservice
 In your index.js file this is the basic setup
 
 ```js
-const Service = require('express-microservice')
+const Service = require('unitiweb-express-microservice')
 
 Service.config({
   name: 'my-service',
@@ -65,7 +65,7 @@ is a good idea to load these modules in your `context.js` file. Create a `contex
 them like this:
 
 ```js
-const { Context } = require('express-microservice')
+const { Context } = require('unitiweb-express-microservice')
 
 Context.add('uuid', 'uuid/v4')    // An external library that will be accessed using uuid
 Context.add('models', './models') // An internal module you might created to manage data
@@ -78,7 +78,7 @@ The first argument is the name of the module and the second arguyment is the str
 An error can be configured in the `error.js` file. You then can throw the error in your endpoints.
 
 ```js
-const { Error } = require('express-microservice')
+const { Error } = require('unitiweb-express-microservice')
 
 Error.add(
   404,
@@ -118,7 +118,7 @@ The first is `data` (the input data to be validated) and `context` (the context 
 The callback must return `true` if validation passed, and an object of errors if there is errors.
 
 ```js
-const { Validator } = require('express-microservice')
+const { Validator } = require('unitiweb-express-microservice')
 
 Validator.add('endpoint-path', (data, context ) => {
   const allow = tokenTypes.map((token => token.type))
@@ -169,6 +169,25 @@ Validator.addFormatter('default', (errors) => {
 })
 ```
 
+#### Middleware
+
+It's easy to add a middleware to your microservice. If you only have one middleware you can add it in your index.js
+file. If you have several you can add them in the middleware.js file and they will automatically get loaded.
+
+```js
+const { Middleware } = require('unitiweb-express-microservice')
+
+Service.Middleware.add('addAuth', (req, res, next) => {
+  req.user = {
+    id: 1,
+    name: 'John Doe',
+    isAuth: true,
+    token: 'abc123'
+  }
+  next()
+})
+```
+
 #### Endpoints
 
 You configure your endpoints by using the `Endpoint` object form the Service class. The first argument
@@ -179,7 +198,7 @@ The second argyment is the callback that will be executed when the endpoint is r
 argument is the context configured earlier.
 
 ```js
-const { Endpoint } = require('express-microservice')
+const { Endpoint } = require('unitiweb-express-microservice')
 
 Endpoint.get(
   'health-check',

@@ -1,5 +1,11 @@
 const path = require('path')
 
+const DEFAULT_MIDDLEWARE = 'middleware.js'
+const DEFAULT_VALIDATORS = 'validators.js'
+const DEFAULT_CONTEXT = 'context.js'
+const DEFAULT_ERRORS = 'errors.js'
+const DEFAULT_ENDPOINTS = 'endpoints'
+
 class Config {
 
   constructor () {
@@ -9,10 +15,11 @@ class Config {
       port: 80,
       host: 'localhost',
       basePath: defaultBasePath,
-      endpoints: null,
-      context: null,
-      errors: null,
-      validators: null,
+      endpoints: DEFAULT_ENDPOINTS,
+      context: DEFAULT_CONTEXT,
+      errors: DEFAULT_ERRORS,
+      validators: DEFAULT_VALIDATORS,
+      middleware: DEFAULT_MIDDLEWARE,
       showRoutes: false,
       showBanner: true
     }
@@ -31,30 +38,22 @@ class Config {
   }
 
   endpoints (file) {
-    if (this.data.endpoints === null) {
-      this.data.endpoints = 'endpoints'
-    }
     return this.makePath(this.data.endpoints, file)
   }
 
   context () {
-    if (this.data.context === null) {
-      this.data.context = 'context.js'
-    }
     return this.makePath(this.data.context)
   }
 
   errors () {
-    if (this.data.errors === null) {
-      this.data.errors = 'errors.js'
-    }
     return this.makePath(this.data.errors)
   }
 
   validators () {
-    if (this.data.validators === null) {
-      this.data.validators = 'validators.js'
-    }
+    return this.makePath(this.data.validators)
+  }
+
+  middleware () {
     return this.makePath(this.data.validators)
   }
 
@@ -63,12 +62,6 @@ class Config {
       return true
     } else {
       throw new Error('The supplied config variable does not exist')
-    }
-  }
-
-  set (key, value) {
-    if (this.exists(key)) {
-      this.data[key] = value
     }
   }
 

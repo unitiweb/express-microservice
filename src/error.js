@@ -1,4 +1,5 @@
 const utils = require('./utils')
+const config = require('./config')
 
 class Errors {
 
@@ -32,6 +33,25 @@ class Errors {
       return this.list[error](data)
     }
     throw new Error(`The supplied error ${error} does not exist`)
+  }
+
+  build () {
+    // Load the errors file
+    utils.loadFileIfExists(config.errors())
+
+    // Add validation error
+    this.add(
+      422,
+      'INPUT_VALIDATION_ERROR',
+      'There were validation errors'
+    )
+
+    // Add error used if endpoint can not be found
+    this.add(
+      404,
+      'ENDPOINT_NOT_FOUND',
+      'The specified endpoint does not exist'
+    )
   }
 
 }
