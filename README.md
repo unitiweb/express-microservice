@@ -43,7 +43,17 @@ Once you run one of the examples you should see the banner letting you know the 
 
 If you see this banner you are ready to try it out. Use your favorite rest api tool (like postman or Insomnia)
 and try out the endpoints. You see the host is `localhost` and the port is `4001` and one of the endpoints
-is `/health-check`. So, the api `get` request url would be `http://localhost:4001/health-check`.
+is `/health-check`. So, the api `get` request url would be `http://localhost:4001/health-check`. If all 
+goes well you should see a response like this:
+
+```json
+{
+    "data": {
+        "code": "Success",
+        "message": "This servcie is up and running"
+    }
+}
+``` 
 
 The `/get-user` endpoint is a `post` endpoint and can be send with this json body
 
@@ -70,5 +80,48 @@ Great, now lets move on to implement it with your own microservice.
 
 ### Configuration
 
+Setting up and configuring your microservice is simple. You simply require the `Service`, set a few configurations,
+and start the service listening. Add this basic setup to your index.js file.
+
+```js
+const Service = require('unitiweb-express-microservice')
+
+Service.config({
+  name: 'my-service',
+  port: 8080,
+  host: 'localhost',
+  basePath: __dirname
+})
+
+Service.listen()
+```
+
+A list of all settings and default values
+
+| Setting               | Default                   | Description                                           |                            
+| -------------         | ------------------------- | ----------------------------------------------------- |
+| name                  | microservice              | The name of the microservice                          |
+| port                  | 80                        | The port to be listened to                            |
+| host                  | localhost                 | The microservice's host                               |
+| basePath              | your index.js directory   | The base path to the microservice                     |
+| endpoints             | endpoints                 | The directory that will hold your endpoints           |
+| middleware            | middleware.js             | The file used for middleware                          |
+| context               | context.js                | The file used for context                             |
+| errors                | errors.js                 | The file used for errors                              |
+| validators            | validators.js             | The file used for validators                          |
+| showRoutes            | false                     | Whether or not to show available routes when started  |
+| showBanner            | true                      | Whether or not to show a banner when started          |
+
 ### Components
+
+#### Context
+
+#### Errors
+
+#### Valiators
+
+#### Endpoints
+
+#### Middleware
+
 
