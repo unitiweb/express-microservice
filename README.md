@@ -2,7 +2,25 @@
 
 A simple microservice framework using express.
 
-### Installation
+## Run the Demos
+
+To see the microservice in action you can clone this repo and run the demos
+
+1. Clone the repo
+2. Change to the express-microservice directory
+3. Install Dependencies
+4. Use the proper npm run command for the demo to view
+    - basic
+    - standard
+
+```bash
+# git clone git@github.com:unitiweb/express-microservice.git
+# cd express-microservice
+# npm install
+# npm run basic
+```
+
+## Installation
 
 Run the npm command to install the package.
 
@@ -10,7 +28,7 @@ Run the npm command to install the package.
 npm install express-microservice
 ```
 
-### Basic Setup
+## Basic Setup
 
 In your index.js file this is the basic setup
 
@@ -35,17 +53,18 @@ A list of all settings and default values
 | host                  | localhost                 | The microservice's host                               |
 | basePath              | your index.js directory   | The base path to the microservice                     |
 | endpoints             | endpoints                 | The directory that will hold your endpoints           |
+| middleware            | middleware.js             | The file used for middleware                          |
 | context               | context.js                | The file used for context                             |
 | errors                | errors.js                 | The file used for errors                              |
 | validators            | validators.js             | The file used for validators                          |
 | showRoutes            | false                     | Whether or not to show available routes when started  |
 | showBanner            | true                      | Whether or not to show a banner when started          |
 
-### Parts of the Microservice
+## Parts of the Microservice
 
 These are the parts of the microservice
 
-#### Config
+### Config
 
 The setup of the microservice. These are settings we'll use to configure the way the microservice
 loads and behaves. This will be an array passed to the `config` method on the main `Service` class.
@@ -58,7 +77,7 @@ Service.config({
 })
 ```
 
-#### Context 
+### Context 
 
 Contact is a way to pass commonly used configs, modules, and classes to your endpoints. It
 is a good idea to load these modules in your `context.js` file. Create a `context.js` file and configure
@@ -73,7 +92,7 @@ Context.add('models', './models') // An internal module you might created to man
 
 The first argument is the name of the module and the second arguyment is the string used to require the module.
 
-#### Errors
+### Errors
 
 An error can be configured in the `error.js` file. You then can throw the error in your endpoints.
 
@@ -110,7 +129,7 @@ By default the error response will look like this:
 }
 ```
 
-#### Validators
+### Validators
 
 You can configure validators that will validate the request input. The first argument is the endpoint path to be 
 validated, and the second argument is a callback to perform the validation. The callback has two arguments.
@@ -169,7 +188,7 @@ Validator.addFormatter('default', (errors) => {
 })
 ```
 
-#### Middleware
+### Middleware
 
 It's easy to add a middleware to your microservice. If you only have one middleware you can add it in your index.js
 file. If you have several you can add them in the middleware.js file and they will automatically get loaded.
@@ -188,7 +207,7 @@ Service.Middleware.add('addAuth', (req, res, next) => {
 })
 ```
 
-#### Endpoints
+### Endpoints
 
 You configure your endpoints by using the `Endpoint` object form the Service class. The first argument
 is the path for the endpoint. It doesn't have to start with a trialing slash '/' but it can if you'd like.

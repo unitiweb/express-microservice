@@ -47,6 +47,7 @@ class Endpoints {
 
     const ctx = context.build()
 
+    console.log('this.list', this.list)
     this.list.forEach(endpoint => {
 
       const callbacks = []

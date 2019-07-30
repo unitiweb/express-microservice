@@ -1,10 +1,11 @@
 {
   "name": "unitiweb-express-microservice",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A simple microservice framework using express",
   "main": "src/index.js",
   "scripts": {
     "basic": "node src/examples/basic/index.js",
+    "standard": "node src/examples/standard/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -12,7 +13,9 @@
     "url": "git+https://github.com/unitiweb/express-microservice.git"
   },
   "keywords": [
+    "simple",
     "express",
+    "expressjs",
     "microservice",
     "framework"
   ],

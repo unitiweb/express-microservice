@@ -16,6 +16,7 @@ const requireFile = (path) => {
 
 const requireEndpoint = (path) => {
   if (typeof path === 'string') {
+    console.log('config.endpoints(path)', config.endpoints(path))
     return require(config.endpoints(path))
   }
   return path

@@ -3,20 +3,47 @@ const Service = require('../../index')
 Service.config({
   name: 'basic',
   port: 4000,
-  host: 'localhost',
+  // host: 'localhost',
   basePath: __dirname,
   showRoutes: true,
   showBanner: true
 })
 
-Service.Middleware.add('addAuth', (req, res, next) => {
-  req.user = {
-    id: 1,
-    name: 'John Doe',
-    isAuth: true,
-    token: 'abc123'
+Service.Context.add('users', './users')
+
+Service.Error.add(
+  404,
+  'NOT_FOUND_ERROR',
+  'Request returned no results'
+)
+
+/**
+ * The health-check endpoint
+ */
+Service.Endpoint.get('/health-check', async (res, data, context) => {
+  res.data({
+    code: 'Success',
+    message: 'This servcie is up and running'
+  })
+})
+
+/**
+ * The get-user input validator and endpoint
+ */
+Service.Validator.add('get-user', (data, context) => {
+  if (!data.id) {
+    return { id: 'The id is required' }
   }
-  next()
+  return true
+})
+
+Service.Endpoint.post('/get-user', async (res, data, context) => {
+  const { id } = data
+  const user = context.users.find(user => user.id === id)
+  if (!user) {
+    return res.error('NOT_FOUND_ERROR')
+  }
+  res.data(user)
 })
 
 Service.listen()
