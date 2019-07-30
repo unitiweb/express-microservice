@@ -1,5 +1,8 @@
 ## unitiweb-express-microservice
 
+> **IMPORTANT NOTE** This package is still in it's early development stage. It is not recomended to be used in 
+> production at this point. I am working on getting a final release out as soon. Keep checking back. Thanks.
+
 This package was developed to simplify the creation of a microservice or nanoservice
 that uses expressjs. When creating a web application using the microservice architecture
 it can become cumbersome to setup and maintain all the microservices. That's where this package
@@ -241,6 +244,90 @@ This will be the response.
 
 #### Valiators
 
+The `Validator` component is used to validate the request input body. For example, if you require an 
+`id` to be present in your post endpoint you can create a validator that will make sure the `id` is 
+present or throw a validation error.
+
+If you prefer you can configure your validators in a single file name `validators.js` in the save folder as
+your `index.js` and they will be automatically loaded. You may also feel it best to configure the validator
+in the same file as the endpoint it is to validate. It completely up to you.
+
+A simple validator would look something like this.
+
+```js
+const { Validator } = require('unitiweb-express-microservice')
+
+Validator.add('get-user', (data, context) => {
+  if (!data.id) {
+    return {
+      id: 'The id is required'
+    }
+  }
+  return true
+})
+```
+
+Notice the `add` function has two arguments.
+
+- **get-user**: This is the endpoint path to be validated.
+- **context**: This is the same object configured with the `Context` component.
+
+Your validator should return `true` if all is good, or return an object of errors with the key being the field that
+has the error and the value being a message.
+
+If you want your validator to validate more than one endpoint the first argument can be an array of endpoint paths
+
+```js
+const { Validator } = require('unitiweb-express-microservice')
+
+Validator.add(['get-user', 'get-profile', 'get-other'], (data, context) => {
+  if (!data.id) {
+    return {
+      id: 'The id is required'
+    }
+  }
+  return true
+})
+```
+
+If you are using an external library for validation like `@hapi/joi` for example, you will need to validator formatter
+to format the error response in the correct way. If you are using `@hapi/joi` (for example) in all your validators
+you can override the default formatted using something like this.
+
+```js
+/**
+ * Add an error formatter that will be used to format the data
+ * portion of the INPUT_VALIDATION_ERROR error response
+ */
+Validator.addFormatter('default', (errors) => {
+  if (errors.isJoi === true) {
+    const data = {}
+    errors.details.forEach(err => {
+      data[err.context.key] = err.message
+    })
+    return data
+  } else {
+    throw Error('This is not a Joi Validation Error')
+  }
+})
+```
+
 #### Middleware
 
+If you need to add a middleware to your microservice to check for things like authorization or adding something
+to the request object you can add a middleware to your microservice using the `Middleware` component. 
+Just require the `Middleware` component and use the `add` function giving it two arguments: name, and callback.
 
+```js
+const { Middleware } = require('unitiweb-express-microservice')
+
+Middleware.add('addAuth', (req, res, next) => {
+  req.user = {
+    id: 1,
+    name: 'John Doe',
+    isAuth: true,
+    token: 'abc123'
+  }
+  next()
+})
+```
