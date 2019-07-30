@@ -1,7 +1,8 @@
 ## unitiweb-express-microservice
 
 > **IMPORTANT NOTE** This package is still in it's early development stage. It is not recomended to be used in 
-> production at this point. I am working on getting a final release out as soon. Keep checking back. Thanks.
+> production at this point. I am working on getting a final release with complete unit testing soon. 
+> Keep checking back. Thanks.
 
 This package was developed to simplify the creation of a microservice or nanoservice
 that uses expressjs. When creating a web application using the microservice architecture
