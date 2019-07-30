@@ -101,8 +101,8 @@ A list of all settings and default values
 | Setting               | Default                   | Description                                           |                            
 | -------------         | ------------------------- | ----------------------------------------------------- |
 | name                  | microservice              | The name of the microservice                          |
-| port                  | 80                        | The port to be listened to                            |
-| host                  | localhost                 | The microservice's host                               |
+| port                  | 80                        | The port used to access the service                   |
+| host                  | localhost                 | The host used to access the service                   |
 | basePath              | your index.js directory   | The base path to the microservice                     |
 | endpoints             | endpoints                 | The directory that will hold your endpoints           |
 | middleware            | middleware.js             | The file used for middleware                          |
@@ -114,13 +114,47 @@ A list of all settings and default values
 
 ### Components
 
+There are various components you will use to start creating the functionality of your microservice. The all
+are used similarly.
+
+#### Endpoints
+
+This component is used to create the logic of your endpoints. You can configure these in your index.js file
+but it is recomended to store each endpoint in it's own file inside a directory named `endpoints` in the same
+directory as your `index.js` file. If you do this you don't have to do any configuration. Endpoints by default
+will be loaded from this folder.
+
+You simply need to require the `Endpoint` component, add the endpoint with one of the method functions
+(get, post, put, patch, or delete), give it a path, and create the callback.
+
+```js
+Service.Endpoint.get('/health-check', async (res, data, context) => {
+  res.data({
+    code: 'Success',
+    message: 'This servcie is up and running'
+  })
+})
+```
+
+As you can see the callback function has three arguments.
+
+- **res**: This is the express response object with two additions
+    - **res.data**: This will be used to send your data object response
+    - **res.error**: This is used to send one of the configured errors. You will see how to configure
+    these errors later in this file
+- **data**: This will be the data object submitted to the endpoint. The `/get-user` example above will have the
+data object `{ id: 1 }`.
+- **context**: This is an object of modules and other objects you will configure later. You will configure the
+context with common modules you will have access to simply by accessing this argument. For example, if you need
+to use a uuid generate in many endpoints in your microservice you can configure your context to contain your
+prefered uuid package and access it in any endpoint simply by using `context.uuid`. This will be convered in more
+detail later on. 
+
 #### Context
 
 #### Errors
 
 #### Valiators
-
-#### Endpoints
 
 #### Middleware
 
