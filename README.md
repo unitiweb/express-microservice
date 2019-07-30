@@ -128,7 +128,9 @@ You simply need to require the `Endpoint` component, add the endpoint with one o
 (get, post, put, patch, or delete), give it a path, and create the callback.
 
 ```js
-Service.Endpoint.get('/health-check', async (res, data, context) => {
+const { Endpoint } = require('unitiweb-express-microservice')
+
+Endpoint.get('/health-check', async (res, data, context) => {
   res.data({
     code: 'Success',
     message: 'This servcie is up and running'
@@ -152,7 +154,90 @@ detail later on.
 
 #### Context
 
+The context component can be used to inject commonly used modules and libraries into your endpoints with ease.
+You start by requiring the `Context` component and use the `add` function.
+
+```js
+const { Context } = require('unitiweb-express-microservice')
+
+Context.add('moduleName', 'module')
+```
+
+- **moduleName**: This will be the name you want to set the library to. When you access it in your endpoint
+you would use `context.moduleName`.
+- **module**: This is the string used to require the module. In this case its an external module you instaled
+using a package manager like `npm` or `yarn`.
+
+This works the same way as `require`. If you want to use your own module you would just add the relative path like
+`./my-module` for example.
+
+You can add the context configurations in your `index.js` file, however if you have several you can put then in
+a file named `context.js` in the same directory as your `index.js` file and it will be automatically loaded.
+
 #### Errors
+
+Using the `Errors` component is a great way to make all your error responses consistently formatted. There are
+two pre-defined errors that you can use: `INPUT_VALIDATION_ERROR`, and `ENDPOINT_NOT_FOUND`. It is easy to configure
+your own. You just need to require the `Error` component and use the `add` function.
+
+```js
+const { Error } = require('unitiweb-express-microservice')
+
+Error.add(
+  404,
+  'NOT_FOUND_ERROR',
+  'Request returned no results'
+)
+```
+
+You can throw this error inside your endpoint by using the `res.error` function descussed earlier.
+
+```js
+const { Endpoint } = require('unitiweb-express-microservice')
+
+Endpoint.get('/my-endpoint', async (res, data, context) => {
+  res.error('NOT_FOUND_ERROR')
+})
+```
+
+The will send the following error response.
+
+```json
+{
+    "error": {
+        "status": 404,
+        "code": "NOT_FOUND_ERROR",
+        "message": "Request returned no results",
+        "timeThrown": "2019-07-30T14:22:18.571Z"
+    }
+}
+```
+
+If you need to you can also add a data object as the second argument and it will be added to the response like this:
+
+```js
+const { Endpoint } = require('unitiweb-express-microservice')
+
+Endpoint.get('/my-endpoint', async (res, data, context) => {
+  res.error('NOT_FOUND_ERROR', { reason: `User number ${data.id} could not be found`})
+})
+```
+
+This will be the response.
+
+```json
+{
+    "error": {
+        "status": 404,
+        "code": "NOT_FOUND_ERROR",
+        "message": "Request returned no results",
+        "timeThrown": "2019-07-30T14:22:18.571Z",
+        "data": {
+          "reason": "User number 12 could not be found"  
+        }  
+    }
+}
+```
 
 #### Valiators
 
