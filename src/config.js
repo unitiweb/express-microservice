@@ -10,6 +10,7 @@ class Config {
 
   constructor () {
     const defaultBasePath = require.main.path
+    // Create this.data and add default settings
     this.data = {
       name: 'microservice',
       port: 80,
@@ -25,16 +26,52 @@ class Config {
     }
   }
 
+  /**
+   * Pass configuration settings and set in the data object if property exists
+   *
+   * @param cfg An object containing settings values to be set on this.data
+   */
   init (cfg) {
     for (const key in cfg) {
       if (cfg.hasOwnProperty(key) && this.data.hasOwnProperty(key)) {
         this.data[key] = cfg[key]
+      } else {
+        throw new Error(`The setting key "${key}" is not a valid setting`)
       }
     }
   }
 
+  static trimPath (pathString) {
+    // Make sure str is actually a string
+    if (typeof pathString !== 'string') {
+      throw new Error('utils: trimBoth: the first argument must be a string')
+    }
+    // remove white space
+    pathString = pathString.trim()
+    if (pathString.length === 0) {
+      return ''
+    }
+    // remove char from beginning if exists
+    if (pathString.substr(0, 1) === path.sep) {
+      pathString = pathString.substr(1)
+    }
+    // remove char from end if exists
+    if (pathString.substr(pathString.length - 1, pathString.length) === path.sep) {
+      pathString = pathString.substr(0, pathString.length - 1)
+    }
+    return pathString
+  }
+
   makePath (pathString, file = '') {
-    return path.join(this.data.basePath, pathString, file)
+    let basePath = this.data.basePath
+    if (basePath.substr(0, 1) !== path.sep) {
+      basePath += '/'
+    }
+    return path.join(
+      basePath,
+      Config.trimPath(pathString),
+      Config.trimPath(file)
+    )
   }
 
   endpoints (file) {
@@ -54,14 +91,14 @@ class Config {
   }
 
   middleware () {
-    return this.makePath(this.data.validators)
+    return this.makePath(this.data.middleware)
   }
 
   exists (name) {
     if (this.data.hasOwnProperty(name)) {
       return true
     } else {
-      throw new Error('The supplied config variable does not exist')
+      throw new Error(`The supplied config variable "${name}" does not exist`)
     }
   }
 

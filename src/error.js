@@ -9,7 +9,7 @@ class Errors {
 
   add (status, code, message, formatter = null) {
     this.list[code] = (data) => {
-      if (formatter) {
+      if (formatter !== null) {
         const formatted = formatter(data)
         if (formatted.status) status = formatted.status
         if (formatted.code) code = formatted.code

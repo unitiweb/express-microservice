@@ -1,5 +1,4 @@
 const importModules = require('import-modules')
-const utils = require('./utils')
 const config = require('./config')
 const validator = require('./validator')
 const context = require('./context')
@@ -10,12 +9,18 @@ class Endpoints {
     this.list = []
   }
 
+  static require (path) {
+    if (typeof path === 'string') {
+      return require(config.endpoints(path))
+    }
+  }
+
   add (method, path, module) {
     if (path.substr(0, 1) === '/') {
       path = path.substr(1)
     }
     if (typeof module === 'string') {
-      module = utils.requireEndpoint(module)
+      module = Endpoints.require(module)
     }
     this.list.push({ method, path, module })
   }
@@ -41,15 +46,14 @@ class Endpoints {
   }
 
   build (app) {
+
     if (config.endpoints()) {
       importModules(config.endpoints());
     }
 
     const ctx = context.build()
 
-    console.log('this.list', this.list)
     this.list.forEach(endpoint => {
-
       const callbacks = []
 
       // Add the validation middleware
@@ -68,6 +72,7 @@ class Endpoints {
       app[endpoint.method]('/' + endpoint.path, callbacks)
     })
   }
+
 }
 
 module.exports = new Endpoints()

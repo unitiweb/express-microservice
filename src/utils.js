@@ -1,11 +1,18 @@
-const config = require('./config')
 const fs = require('fs')
 
-const requireFile = (path) => {
+/**
+ * Require an external, local, or direct and return the module
+ *
+ * @param path The path or module to be required
+ * @param basePath The configured base path
+ *
+ * @returns {*}
+ */
+const requireFile = (path, basePath) => {
   if (typeof path === 'string') {
     let module = null
     if (path.substr(0, 1) === '.') {
-      module = require(config.get('basePath') + '/' + path)
+      module = require(basePath + '/' + path)
     } else {
       module = require(path)
     }
@@ -14,66 +21,85 @@ const requireFile = (path) => {
   return path
 }
 
-const requireEndpoint = (path) => {
-  if (typeof path === 'string') {
-    console.log('config.endpoints(path)', config.endpoints(path))
-    return require(config.endpoints(path))
-  }
-  return path
-}
-
-const getEndpointsList = (app) => {
-  const routes = [];
-  app._router.stack.forEach(function(expressRoute){
-    if(expressRoute.route) {
-      routes.push(expressRoute.route);
-    } else if(expressRoute.name === 'router') {
-      expressRoute.handle.stack.forEach(function(handler){
-        const route = handler.route;
-        route && routes.push(route);
-      });
-    }
-  })
-
-  return routes
-}
-
-const logMessage = () => {
-  console.log(
-    '| ' + config.get('name').toUpperCase() +
+/**
+ * Echo out the start log message
+ *
+ * @param name The servic ename as configured
+ * @param host The service host as configured
+ * @param port The service port as configured
+ */
+const logMessage = (name, host, port) => {
+  return '| ' + name.toUpperCase() +
     ' IS NOW LISTENING TO' +
-    ' HOST ' + config.get('host') +
-    ' ON PORT ' + config.get('port')
-  )
+    ' HOST ' + host +
+    ' ON PORT ' + port
 }
 
-const logRoutes = (app) => {
-  if (config.get('showRoutes') === true) {
-    const routes = getEndpointsList(app)
-    routes.forEach(route => {
-      let method = 'ANY'
-      if (route.methods.get) method = 'GET'
-      else if (route.methods.post) method = 'POST'
-      else if (route.methods.put) method = 'PUT'
-      else if (route.methods.delete) method = 'DELETE'
-      console.log(`|--> ${method} : ${route.path}`)
-    })
+/**
+ * Echo out the list of configured endpoints
+ *
+ * @param endpoints The config array of endpoints
+ */
+const logRoutes = (endpoints) => {
+  let log = ''
+  for (let i = 0; i < endpoints.length; i++) {
+    const endpoint = endpoints[i]
+    let method = 'ANY    :'
+    if (endpoint.method === 'get') method = 'GET    :'
+    else if (endpoint.method === 'post') method = 'POST   :'
+    else if (endpoint.method === 'put') method = 'PUT    :'
+    else if (endpoint.method === 'patch') method = 'PATCH  :'
+    else if (endpoint.method === 'delete') method = 'DELETE :'
+    log += `|--> ${method} /${endpoint.path}` + "\n"
   }
+  return log
 }
 
-const logStatus = (app) => {
-  if (config.get('showBanner') === true) {
-    console.log('')
-    console.log('|==============================================================')
-    logMessage()
-    console.log('|--------------------------------------------------------------')
-    logRoutes(app)
-    console.log('|==============================================================')
-  } else {
-    logMessage()
+/**
+ * Echo out the log banner if configured to show
+ *
+ * @param endpoints The configuration list of endpoints
+ * @param showBanner The configuration to show banner
+ * @param showRoutes The configuration to show routes
+ * @param name The configured name of the service
+ * @param host The configured host of the service
+ * @param port The configured port of the service
+ */
+const logStatus = (endpoints, showBanner, showRoutes, name, host, port) => {
+  let log = ''
+
+  if (showBanner !== true && showRoutes !== true) {
+    return `-- ${name} microservice @ http://${host}:${port}`
   }
+
+  log += "\n"
+  log += '|=============================================================='
+  log += "\n"
+
+  if (showBanner === true) {
+    log += logMessage(name, host, port) + "\n"
+  }
+
+  if (showBanner === true && showRoutes === true) {
+    log += '|--------------------------------------------------------------'
+    log += "\n"
+  }
+
+  if (showRoutes === true) {
+    log += logRoutes(endpoints)
+  }
+
+  log += '|=============================================================='
+  log += "\n"
+
+  return log
 }
 
+/**
+ * Check to see if the given file path exists
+ *
+ * @param path The path the check
+ */
 const loadFileIfExists = (path) => {
   if (fs.existsSync(path)) {
     require(path)
@@ -82,8 +108,6 @@ const loadFileIfExists = (path) => {
 
 module.exports = {
   requireFile,
-  requireEndpoint,
-  getEndpointsList,
   logStatus,
   loadFileIfExists
 }

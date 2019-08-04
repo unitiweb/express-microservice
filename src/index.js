@@ -13,7 +13,7 @@ class Service {
 
   constructor () {
     this.app = Service.express()
-    this.cfg = config
+    this.Config = config
     this.Endpoint = endpoints
     this.Context = context
     this.Error = errors
@@ -22,7 +22,7 @@ class Service {
   }
 
   config (cfg) {
-    this.cfg.init(cfg)
+    this.Config.init(cfg)
   }
 
   static express () {
@@ -32,16 +32,33 @@ class Service {
     return app
   }
 
-  listen () {
-
+  build () {
     this.Validator.build()
     this.Error.build()
     this.Middleware.build(this.app)
     this.Endpoint.build(this.app)
+  }
 
-    this.app.listen(this.cfg.get('port'), () => {
-      utils.logStatus(this.app)
+  listen () {
+    this.build()
+    this.app.listen(this.Config.get('port'), () => {
+      const log = utils.logStatus(
+        this.Endpoint.list,
+        this.Config.get('showBanner'),
+        this.Config.get('showRoutes'),
+        this.Config.get('name'),
+        this.Config.get('host'),
+        this.Config.get('port')
+      )
+      console.log(log)
     })
+  }
+
+  run (callback) {
+    this.build()
+    const server = this.app.listen(this.Config.get('port'))
+    callback()
+    server.close()
   }
 
 }
