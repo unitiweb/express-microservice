@@ -88,7 +88,7 @@ describe('Service Error', () => {
     it('building errors includes only 2 errors', () => {
       const error = Service.newInstance({ basePath: '/base/path'}).error
       error.build()
-      assert.isFalse(Object.keys(error.list).length === 2)
+      assert.isTrue(Object.keys(error.list).length === 2)
     })
   })
 })
