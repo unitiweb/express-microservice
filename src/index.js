@@ -10,7 +10,6 @@ const Validators = require('./validator')
 const Errors = require('./error')
 
 class Service {
-
   constructor (cfg) {
     // Build express app
     this.app = express()
@@ -65,7 +64,6 @@ class Service {
     callback(this.app)
     server.close()
   }
-
 }
 
 module.exports = new Service()

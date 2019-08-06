@@ -50,7 +50,7 @@ const logRoutes = (endpoints) => {
     else if (endpoint.method === 'put') method = 'PUT    :'
     else if (endpoint.method === 'patch') method = 'PATCH  :'
     else if (endpoint.method === 'delete') method = 'DELETE :'
-    log += `|--> ${method} /${endpoint.path}` + "\n"
+    log += `|--> ${method} /${endpoint.path}` + '\n'
   }
   return log
 }
@@ -72,17 +72,17 @@ const logStatus = (endpoints, showBanner, showRoutes, name, host, port) => {
     return `-- ${name} microservice @ http://${host}:${port}`
   }
 
-  log += "\n"
+  log += '\n'
   log += '|=============================================================='
-  log += "\n"
+  log += '\n'
 
   if (showBanner === true) {
-    log += logMessage(name, host, port) + "\n"
+    log += logMessage(name, host, port) + '\n'
   }
 
   if (showBanner === true && showRoutes === true) {
     log += '|--------------------------------------------------------------'
-    log += "\n"
+    log += '\n'
   }
 
   if (showRoutes === true) {
@@ -90,7 +90,7 @@ const logStatus = (endpoints, showBanner, showRoutes, name, host, port) => {
   }
 
   log += '|=============================================================='
-  log += "\n"
+  log += '\n'
 
   return log
 }

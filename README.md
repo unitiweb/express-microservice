@@ -1,3 +1,5 @@
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+
 ## unitiweb-express-microservice
 
 > **IMPORTANT NOTE** This package is still in it's early development stage. It is not recomended to be used in 

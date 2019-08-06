@@ -1,7 +1,6 @@
 const utils = require('./utils')
 
 class Errors {
-
   constructor (config) {
     this.list = {}
     this.config = config
@@ -29,7 +28,7 @@ class Errors {
   }
 
   get (error, data) {
-    if (this.list.hasOwnProperty(error)) {
+    if (Object.prototype.hasOwnProperty.call(this.list, error)) {
       return this.list[error](data)
     }
     throw new Error(`The supplied error ${error} does not exist`)
@@ -53,7 +52,6 @@ class Errors {
       'The specified endpoint does not exist'
     )
   }
-
 }
 
 module.exports = Errors

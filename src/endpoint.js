@@ -1,8 +1,7 @@
 const importModules = require('import-modules')
 
 class Endpoints {
-
-  constructor(app, config, context, validator) {
+  constructor (app, config, context, validator) {
     this.list = []
     this.app = app
     this.config = config
@@ -47,9 +46,8 @@ class Endpoints {
   }
 
   build () {
-
     if (this.config.endpoints()) {
-      importModules(this.config.endpoints());
+      importModules(this.config.endpoints())
     }
 
     const ctx = this.context.build()
@@ -73,7 +71,6 @@ class Endpoints {
       this.app[endpoint.method]('/' + endpoint.path, ...callbacks)
     })
   }
-
 }
 
 module.exports = Endpoints

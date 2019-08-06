@@ -7,7 +7,6 @@ const DEFAULT_ERRORS = 'errors.js'
 const DEFAULT_ENDPOINTS = 'endpoints'
 
 class Config {
-
   constructor (basePath) {
     // Create this.data and add default settings
     this.data = {
@@ -32,7 +31,10 @@ class Config {
    */
   init (cfg) {
     for (const key in cfg) {
-      if (cfg.hasOwnProperty(key) && this.data.hasOwnProperty(key)) {
+      if (
+        Object.prototype.hasOwnProperty.call(cfg, key) &&
+        Object.prototype.hasOwnProperty.call(this.data, key)
+      ) {
         this.data[key] = cfg[key]
       } else {
         throw new Error(`The setting key "${key}" is not a valid setting`)
@@ -94,7 +96,7 @@ class Config {
   }
 
   exists (name) {
-    if (this.data.hasOwnProperty(name)) {
+    if (Object.prototype.hasOwnProperty.call(this.data, name)) {
       return true
     } else {
       throw new Error(`The supplied config variable "${name}" does not exist`)
@@ -106,7 +108,6 @@ class Config {
       return this.data[key]
     }
   }
-
 }
 
 module.exports = Config

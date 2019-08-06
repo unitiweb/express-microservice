@@ -8,7 +8,6 @@ const { endpoint } = require('../../../index')
 endpoint.post(
   '/get-user',
   async (res, data, context) => {
-
     const { id } = data
     const user = context.users.find(user => user.id === id)
 

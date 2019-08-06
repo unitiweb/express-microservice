@@ -1,7 +1,6 @@
 const utils = require('./utils')
 
 class Middleware {
-
   constructor (config, errors) {
     this.config = config
     this.errors = errors
@@ -9,7 +8,7 @@ class Middleware {
   }
 
   add (name, callback) {
-    this.list.push({name, callback})
+    this.list.push({ name, callback })
   }
 
   get (name) {
@@ -21,7 +20,6 @@ class Middleware {
   }
 
   build (app) {
-
     utils.loadFileIfExists(this.config.middleware())
 
     this.add('addData', (req, res, next) => {

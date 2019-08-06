@@ -1,7 +1,6 @@
 const utils = require('./utils')
 
 class Context {
-
   constructor (config) {
     this.list = []
     this.config = config
@@ -22,7 +21,6 @@ class Context {
     })
     return context
   }
-
 }
 
 module.exports = Context

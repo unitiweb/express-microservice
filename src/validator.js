@@ -1,7 +1,6 @@
 const utils = require('./utils')
 
 class Validators {
-
   constructor (config) {
     this.config = config
     this.list = {}
@@ -29,7 +28,7 @@ class Validators {
     if (this.list.hasOwnProperty(endpointPath)) {
       return this.list[endpointPath]
     }
-    return null;
+    return null
   }
 
   addFormatter (name, closure) {
@@ -66,7 +65,6 @@ class Validators {
   build () {
     utils.loadFileIfExists(this.config.validators())
   }
-
 }
 
 module.exports = Validators
