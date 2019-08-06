@@ -47,9 +47,7 @@ class Service {
   listen (callback) {
     this.build()
     if (NODE_ENV === 'testing') {
-      const server = this.app.listen(this.config.get('port'))
       callback(this.app)
-      server.close()
     } else {
       this.app.listen(this.config.get('port'), () => {
         const log = utils.logStatus(
