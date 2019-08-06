@@ -8,9 +8,9 @@
     "standard": "node src/examples/standard/index.js",
     "test": "mocha 'test/**/*test.js'",
     "test:filter": "mocha",
-    "test:coverage:local": "nyc npm run test",
-    "test:coverage": "nyc report --reporter=text-lcov | coveralls",
-    "test:coverage:report": "nyc report --reporter=lcov --reporter=html && open ./coverage/index.html",
+    "test:coverage": "nyc npm run test",
+    "test:coverage:report": "nyc report --reporter=text-lcov | coveralls",
+    "test:coverage:report:local": "nyc report --reporter=lcov --reporter=html && open ./coverage/index.html",
     "test:lint": "eslint src/**",
     "test:lint:fix": "eslint --fix src/**"
   },
