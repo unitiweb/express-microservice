@@ -90,7 +90,7 @@ and start the service listening. Add this basic setup to your index.js file.
 ```js
 const Service = require('unitiweb-express-microservice')
 
-Service.config({
+Service.setup({
   name: 'my-service',
   port: 8080,
   host: 'localhost',

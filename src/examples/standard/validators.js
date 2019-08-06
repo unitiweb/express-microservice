@@ -1,6 +1,6 @@
-const { Validator } = require('../../index')
+const { validator } = require('../../index')
 
-Validator.add('get-user', (data, context) => {
+validator.add('get-user', (data, context) => {
   if (!data.id) {
     return {
       id: 'The id is required'

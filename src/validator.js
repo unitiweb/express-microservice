@@ -1,9 +1,9 @@
-const config = require('./config')
 const utils = require('./utils')
 
 class Validators {
 
-  constructor () {
+  constructor (config) {
+    this.config = config
     this.list = {}
     this.formatters = {}
     this.error = null
@@ -11,10 +11,16 @@ class Validators {
 
   add (endpointPath, closure) {
     if (Array.isArray(endpointPath)) {
-      endpointPath.forEach(module => {
-        this.list[module] = closure
+      endpointPath.forEach(path => {
+        if (path.substr(0, 1) === '/') {
+          path = path.substr(1)
+        }
+        this.list[path] = closure
       })
     } else {
+      if (endpointPath.substr(0, 1) === '/') {
+        endpointPath = endpointPath.substr(1)
+      }
       this.list[endpointPath] = closure
     }
   }
@@ -58,9 +64,9 @@ class Validators {
   }
 
   build () {
-    utils.loadFileIfExists(config.validators())
+    utils.loadFileIfExists(this.config.validators())
   }
 
 }
 
-module.exports = new Validators()
+module.exports = Validators

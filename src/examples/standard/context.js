@@ -1,7 +1,7 @@
-const { Context } = require('../../index')
+const { context } = require('../../index')
 
 /**
  * Just a simple module with a list of users
  * This will be available in all endpoints and validators
  */
-Context.add('users', './libs/users')
+context.add('users', './libs/users')

@@ -1,34 +1,35 @@
 const { assert, expect } = require('chai')
 const { describe, it } = require('mocha')
-const Context = require('../../src/context')
 const mockModule = require('mock-require')
+const Service = require('../../src')
 
 describe('Service Context', () => {
-  describe('Test adding context', () => {
-    it('has been added to list', () => {
-      Context.add('myModule', './my-module')
-      const found = Context.list.find(context => context.name === 'myModule')
+  describe('add', () => {
+    it('has added to list', () => {
+      const context = Service.newInstance().context
+      context.add('myModule', './my-module')
+      const found = context.list.find(context => context.name === 'myModule')
       assert.deepEqual(found, { name: 'myModule', module: './my-module'})
     })
   })
-  describe('Test building context object', () => {
-    it('build context object success', () => {
-      Context.list = []
+  describe('build', () => {
+    it('context object success', () => {
+      const context = Service.newInstance({ basePath: '/base/path' }).context
       mockModule('module1', { test: 1 });
       mockModule('module2', { test: 2 });
-      Context.add('module1', 'module1')
-      Context.add('module2', 'module2')
+      context.add('module1', 'module1')
+      context.add('module2', 'module2')
       assert.deepEqual(
-        Context.build(),
+        context.build(),
         { module1: { test: 1 }, module2: { test: 2 }
       })
       mockModule.stopAll()
     })
     it('build context object failed', () => {
-      Context.list = []
-      Context.add('module3', 'module3')
+      const context = Service.newInstance({ basePath: '/base/path' }).context
+      context.add('module3', 'module3')
       expect(() => {
-        Context.build()
+        context.build()
       }).to.throw(
         "Cannot find module 'module3'"
       )

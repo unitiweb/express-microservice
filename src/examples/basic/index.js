@@ -1,16 +1,15 @@
 const Service = require('../../index')
 
-Service.config({
+Service.config.init({
   name: 'basic',
   port: 4000,
   basePath: __dirname,
-  showRoutes: false,
-  showBanner: false
+  showRoutes: true,
+  showBanner: true
 })
+Service.context.add('users', './users')
 
-Service.Context.add('users', './users')
-
-Service.Error.add(
+Service.error.add(
   404,
   'NOT_FOUND_ERROR',
   'Request returned no results'
@@ -19,7 +18,7 @@ Service.Error.add(
 /**
  * The health-check endpoint
  */
-Service.Endpoint.get('/health-check', async (res, data, context) => {
+Service.endpoint.get('/health-check', async (res, data, context) => {
   res.data({
     code: 'Success',
     message: 'This servcie is up and running'
@@ -29,14 +28,14 @@ Service.Endpoint.get('/health-check', async (res, data, context) => {
 /**
  * The get-user input validator and endpoint
  */
-Service.Validator.add('get-user', (data, context) => {
+Service.validator.add('get-user', (data, context) => {
   if (!data.id) {
     return { id: 'The id is required' }
   }
   return true
 })
 
-Service.Endpoint.post('/get-user', async (res, data, context) => {
+Service.endpoint.post('/get-user', async (res, data, context) => {
   const { id } = data
   const user = context.users.find(user => user.id === id)
   if (!user) {

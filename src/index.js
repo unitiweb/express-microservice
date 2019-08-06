@@ -2,53 +2,58 @@ const express = require('express')
 const bodyParser = require('body-parser')
 
 const utils = require('./utils')
-const config = require('./config')
-const endpoints = require('./endpoint')
-const context = require('./context')
-const middleware = require('./middleware')
-const validators = require('./validator')
-const errors = require('./error')
+const Config = require('./config')
+const Endpoint = require('./endpoint')
+const Context = require('./context')
+const Middleware = require('./middleware')
+const Validators = require('./validator')
+const Errors = require('./error')
 
 class Service {
 
-  constructor () {
-    this.app = Service.express()
-    this.Config = config
-    this.Endpoint = endpoints
-    this.Context = context
-    this.Error = errors
-    this.Validator = validators
-    this.Middleware = middleware
+  constructor (cfg) {
+    // Build express app
+    this.app = express()
+    this.app.use(bodyParser.urlencoded({ extended: false }))
+    this.app.use(bodyParser.json())
+    // Load dependencies
+    this.config = new Config(require.main.path)
+    this.context = new Context(this.config)
+    this.error = new Errors(this.config)
+    this.validator = new Validators(this.config)
+    this.middleware = new Middleware(this.config, this.error)
+    this.endpoint = new Endpoint(
+      this.app,
+      this.config,
+      this.context,
+      this.validator
+    )
+    if (cfg) {
+      this.config.init(cfg)
+    }
   }
 
-  config (cfg) {
-    this.Config.init(cfg)
-  }
-
-  static express () {
-    const app = express()
-    app.use(bodyParser.urlencoded({ extended: false }))
-    app.use(bodyParser.json())
-    return app
+  newInstance (cfg) {
+    return new Service(cfg)
   }
 
   build () {
-    this.Validator.build()
-    this.Error.build()
-    this.Middleware.build(this.app)
-    this.Endpoint.build(this.app)
+    this.validator.build()
+    this.error.build()
+    this.middleware.build(this.app)
+    this.endpoint.build(this.app)
   }
 
   listen () {
     this.build()
-    this.app.listen(this.Config.get('port'), () => {
+    this.app.listen(this.config.get('port'), () => {
       const log = utils.logStatus(
-        this.Endpoint.list,
-        this.Config.get('showBanner'),
-        this.Config.get('showRoutes'),
-        this.Config.get('name'),
-        this.Config.get('host'),
-        this.Config.get('port')
+        this.endpoint.list,
+        this.config.get('showBanner'),
+        this.config.get('showRoutes'),
+        this.config.get('name'),
+        this.config.get('host'),
+        this.config.get('port')
       )
       console.log(log)
     })
@@ -56,8 +61,8 @@ class Service {
 
   run (callback) {
     this.build()
-    const server = this.app.listen(this.Config.get('port'))
-    callback()
+    const server = this.app.listen(this.config.get('port'))
+    callback(this.app)
     server.close()
   }
 

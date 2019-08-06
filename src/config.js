@@ -8,14 +8,13 @@ const DEFAULT_ENDPOINTS = 'endpoints'
 
 class Config {
 
-  constructor () {
-    const defaultBasePath = require.main.path
+  constructor (basePath) {
     // Create this.data and add default settings
     this.data = {
       name: 'microservice',
       port: 80,
       host: 'localhost',
-      basePath: defaultBasePath,
+      basePath: basePath,
       endpoints: DEFAULT_ENDPOINTS,
       context: DEFAULT_CONTEXT,
       errors: DEFAULT_ERRORS,
@@ -41,7 +40,7 @@ class Config {
     }
   }
 
-  static trimPath (pathString) {
+  trimPath (pathString) {
     // Make sure str is actually a string
     if (typeof pathString !== 'string') {
       throw new Error('utils: trimBoth: the first argument must be a string')
@@ -65,12 +64,12 @@ class Config {
   makePath (pathString, file = '') {
     let basePath = this.data.basePath
     if (basePath.substr(0, 1) !== path.sep) {
-      basePath += '/'
+      basePath = path.sep + basePath
     }
     return path.join(
       basePath,
-      Config.trimPath(pathString),
-      Config.trimPath(file)
+      this.trimPath(pathString),
+      this.trimPath(file)
     )
   }
 
@@ -110,4 +109,4 @@ class Config {
 
 }
 
-module.exports = new Config()
+module.exports = Config

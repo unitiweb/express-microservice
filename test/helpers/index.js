@@ -1,26 +1,24 @@
-const Config = require('../../src/config')
-const Error = require('../../src/error')
+const mockModule = require('mock-require')
+const Service = require('../../src/')
 
 module.exports = {
 
-  resetConfig: () => {
-    Config.init({
-      name: 'microservice',
-      port: 80,
-      host: 'localhost',
-      basePath: '/base/path',
-      endpoints: 'endpoints',
-      context: 'context.js',
-      errors: 'errors.js',
-      validators: 'validators.js',
-      middleware: 'middleware.js',
-      showRoutes: false,
-      showBanner: true
+  hasRoute: (app, path) => {
+    let found = false
+    app._router.stack.forEach(function(r){
+      if (r.route && r.route.path){
+        if (r.route.path === '/./' + path) {
+          found = true
+        }
+      }
     })
+    return found
   },
 
-  resetError: () => {
-    Error.list = []
-  }
-
+  makeService: (cfg) => {
+    if (!cfg) {
+      cfg = { basePath: '/base/path' }
+    }
+    return Service.newInstance(cfg)
+  },
 }

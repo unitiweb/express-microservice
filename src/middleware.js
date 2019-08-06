@@ -1,20 +1,28 @@
-const errors = require('./error')
 const utils = require('./utils')
-const config = require('./config')
 
 class Middleware {
-  constructor () {
+
+  constructor (config, errors) {
+    this.config = config
+    this.errors = errors
     this.list = []
   }
+
   add (name, callback) {
     this.list.push({name, callback})
   }
+
   get (name) {
-    return this.list.find(middleware => middleware.name === name)
+    const middleware = this.list.find(middleware => middleware.name === name)
+    if (middleware) {
+      return middleware
+    }
+    throw new Error(`No middleware exists with the name ${name}`)
   }
+
   build (app) {
 
-    utils.loadFileIfExists(config.middleware())
+    utils.loadFileIfExists(this.config.middleware())
 
     this.add('addData', (req, res, next) => {
       res.data = (data) => {
@@ -25,7 +33,7 @@ class Middleware {
 
     this.add('addError', (req, res, next) => {
       res.error = (error, data) => {
-        const err = errors.get(error, data)
+        const err = this.errors.get(error, data)
         return res.status(err.error.status).json(err)
       }
       next()
@@ -37,4 +45,4 @@ class Middleware {
   }
 }
 
-module.exports = new Middleware()
+module.exports = Middleware

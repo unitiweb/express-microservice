@@ -1,6 +1,6 @@
 const Service = require('../../index')
 
-Service.config({
+Service.config.init({
   name: 'basic',
   port: 4001,
   host: 'localhost',

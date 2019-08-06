@@ -1,10 +1,10 @@
 const utils = require('./utils')
-const config = require('./config')
 
 class Errors {
 
-  constructor () {
+  constructor (config) {
     this.list = {}
+    this.config = config
   }
 
   add (status, code, message, formatter = null) {
@@ -37,7 +37,7 @@ class Errors {
 
   build () {
     // Load the errors file
-    utils.loadFileIfExists(config.errors())
+    utils.loadFileIfExists(this.config.errors())
 
     // Add validation error
     this.add(
@@ -56,4 +56,4 @@ class Errors {
 
 }
 
-module.exports = new Errors
+module.exports = Errors

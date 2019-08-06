@@ -1,6 +1,6 @@
-const { Middleware } = require('../../index')
+const { middleware } = require('../../index')
 
-Middleware.add('addAuth', (req, res, next) => {
+middleware.add('addAuth', (req, res, next) => {
   req.user = {
     id: 1,
     name: 'John Doe',

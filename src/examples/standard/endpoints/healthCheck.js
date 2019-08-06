@@ -1,11 +1,11 @@
-const { Endpoint } = require('../../../index')
+const { endpoint } = require('../../../index')
 
 /**
  * If prefered you could configure the Validator for the endpoint here
  * instead of the Validators.js file.
  */
 
-Endpoint.get(
+endpoint.get(
   '/health-check',
   async (res, data, context) => {
     res.data({

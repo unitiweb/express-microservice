@@ -1,10 +1,10 @@
 const utils = require('./utils')
-const config = require('./config')
 
 class Context {
 
-  constructor () {
+  constructor (config) {
     this.list = []
+    this.config = config
   }
 
   add (name, module) {
@@ -12,16 +12,17 @@ class Context {
   }
 
   build () {
-    // Load the context file
-    utils.loadFileIfExists(config.context())
-    // Add configured context libraries to context object
+    utils.loadFileIfExists(this.config.context())
     const context = {}
     this.list.forEach(ctx => {
-      context[ctx.name] = utils.requireFile(ctx.module, config.get('basePath'))
+      context[ctx.name] = utils.requireFile(
+        ctx.module,
+        this.config.get('basePath')
+      )
     })
     return context
   }
 
 }
 
-module.exports = new Context
+module.exports = Context
