@@ -40,8 +40,8 @@ Once you run one of the examples you should see the banner letting you know the 
 |==============================================================
 | BASIC IS NOW LISTENING TO HOST localhost ON PORT 4001
 |--------------------------------------------------------------
-|--> POST : /get-user
-|--> GET : /health-check
+|--> POST   : /get-user
+|--> GET    : /health-check
 |==============================================================
 ```
 
