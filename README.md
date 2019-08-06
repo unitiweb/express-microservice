@@ -90,7 +90,7 @@ and start the service listening. Add this basic setup to your index.js file.
 ```js
 const Service = require('unitiweb-express-microservice')
 
-Service.setup({
+Service.config.init({
   name: 'my-service',
   port: 8080,
   host: 'localhost',
@@ -132,9 +132,9 @@ You simply need to require the `Endpoint` component, add the endpoint with one o
 (get, post, put, patch, or delete), give it a path, and create the callback.
 
 ```js
-const { Endpoint } = require('unitiweb-express-microservice')
+const Service = require('unitiweb-express-microservice')
 
-Endpoint.get('/health-check', async (res, data, context) => {
+Service.endpoint.get('/health-check', async (res, data, context) => {
   res.data({
     code: 'Success',
     message: 'This servcie is up and running'
@@ -162,9 +162,9 @@ The context component can be used to inject commonly used modules and libraries 
 You start by requiring the `Context` component and use the `add` function.
 
 ```js
-const { Context } = require('unitiweb-express-microservice')
+const Service = require('unitiweb-express-microservice')
 
-Context.add('moduleName', 'module')
+Service.context.add('moduleName', 'module')
 ```
 
 - **moduleName**: This will be the name you want to set the library to. When you access it in your endpoint
@@ -185,9 +185,9 @@ two pre-defined errors that you can use: `INPUT_VALIDATION_ERROR`, and `ENDPOINT
 your own. You just need to require the `Error` component and use the `add` function.
 
 ```js
-const { Error } = require('unitiweb-express-microservice')
+const Service = require('unitiweb-express-microservice')
 
-Error.add(
+Service.error.add(
   404,
   'NOT_FOUND_ERROR',
   'Request returned no results'
@@ -197,9 +197,9 @@ Error.add(
 You can throw this error inside your endpoint by using the `res.error` function descussed earlier.
 
 ```js
-const { Endpoint } = require('unitiweb-express-microservice')
+const Service = require('unitiweb-express-microservice')
 
-Endpoint.get('/my-endpoint', async (res, data, context) => {
+Service.endpoint.get('/my-endpoint', async (res, data, context) => {
   res.error('NOT_FOUND_ERROR')
 })
 ```
@@ -220,9 +220,9 @@ The will send the following error response.
 If you need to you can also add a data object as the second argument and it will be added to the response like this:
 
 ```js
-const { Endpoint } = require('unitiweb-express-microservice')
+const Service = require('unitiweb-express-microservice')
 
-Endpoint.get('/my-endpoint', async (res, data, context) => {
+Service.endpoint.get('/my-endpoint', async (res, data, context) => {
   res.error('NOT_FOUND_ERROR', { reason: `User number ${data.id} could not be found`})
 })
 ```
@@ -256,9 +256,9 @@ in the same file as the endpoint it is to validate. It completely up to you.
 A simple validator would look something like this.
 
 ```js
-const { Validator } = require('unitiweb-express-microservice')
+const Service = require('unitiweb-express-microservice')
 
-Validator.add('get-user', (data, context) => {
+Service.validator.add('get-user', (data, context) => {
   if (!data.id) {
     return {
       id: 'The id is required'
@@ -279,9 +279,9 @@ has the error and the value being a message.
 If you want your validator to validate more than one endpoint the first argument can be an array of endpoint paths
 
 ```js
-const { Validator } = require('unitiweb-express-microservice')
+const Service = require('unitiweb-express-microservice')
 
-Validator.add(['get-user', 'get-profile', 'get-other'], (data, context) => {
+Service.validator.add(['get-user', 'get-profile', 'get-other'], (data, context) => {
   if (!data.id) {
     return {
       id: 'The id is required'
@@ -300,7 +300,7 @@ you can override the default formatted using something like this.
  * Add an error formatter that will be used to format the data
  * portion of the INPUT_VALIDATION_ERROR error response
  */
-Validator.addFormatter('default', (errors) => {
+Service.validator.addFormatter('default', (errors) => {
   if (errors.isJoi === true) {
     const data = {}
     errors.details.forEach(err => {
@@ -320,9 +320,9 @@ to the request object you can add a middleware to your microservice using the `M
 Just require the `Middleware` component and use the `add` function giving it two arguments: name, and callback.
 
 ```js
-const { Middleware } = require('unitiweb-express-microservice')
+const Service = require('unitiweb-express-microservice')
 
-Middleware.add('addAuth', (req, res, next) => {
+Service.middleware.add('addAuth', (req, res, next) => {
   req.user = {
     id: 1,
     name: 'John Doe',
