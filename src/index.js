@@ -8,6 +8,7 @@ const Context = require('./context')
 const Middleware = require('./middleware')
 const Validators = require('./validator')
 const Errors = require('./error')
+const { NODE_ENV } = process.env
 
 class Service {
   constructor (cfg) {
@@ -43,26 +44,25 @@ class Service {
     this.endpoint.build(this.app)
   }
 
-  listen () {
+  listen (callback) {
     this.build()
-    this.app.listen(this.config.get('port'), () => {
-      const log = utils.logStatus(
-        this.endpoint.list,
-        this.config.get('showBanner'),
-        this.config.get('showRoutes'),
-        this.config.get('name'),
-        this.config.get('host'),
-        this.config.get('port')
-      )
-      console.log(log)
-    })
-  }
-
-  run (callback) {
-    this.build()
-    const server = this.app.listen(this.config.get('port'))
-    callback(this.app)
-    server.close()
+    if (NODE_ENV === 'testing') {
+      const server = this.app.listen(this.config.get('port'))
+      callback(this.app)
+      server.close()
+    } else {
+      this.app.listen(this.config.get('port'), () => {
+        const log = utils.logStatus(
+          this.endpoint.list,
+          this.config.get('showBanner'),
+          this.config.get('showRoutes'),
+          this.config.get('name'),
+          this.config.get('host'),
+          this.config.get('port')
+        )
+        console.log(log)
+      })
+    }
   }
 }
 
