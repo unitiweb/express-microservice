@@ -1,6 +1,6 @@
 {
   "name": "unitiweb-express-microservice",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A simple microservice framework using express",
   "main": "src/index.js",
   "scripts": {
