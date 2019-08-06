@@ -1,6 +1,15 @@
 [![CircleCI](https://circleci.com/gh/unitiweb/express-microservice.svg?style=shield)](https://circleci.com/gh/unitiweb/express-microservice)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
+[travis-image]: https://img.shields.io/travis/standard/eslint-config-standard/master.svg
+[travis-url]: https://travis-ci.org/standard/eslint-config-standard
+[npm-image]: https://img.shields.io/npm/v/eslint-config-standard.svg
+[npm-url]: https://npmjs.org/package/eslint-config-standard
+[downloads-image]: https://img.shields.io/npm/dm/eslint-config-standard.svg
+[downloads-url]: https://npmjs.org/package/eslint-config-standard
+[standard-image]: https://img.shields.io/badge/code_style-standard-brightgreen.svg
+[standard-url]: https://standardjs.com
+
 ## unitiweb-express-microservice
 
 > **IMPORTANT NOTE** This package is still in it's early development stage. It is not recomended to be used in 
