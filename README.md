@@ -1,5 +1,7 @@
-[![CircleCI](https://circleci.com/gh/unitiweb/express-microservice.svg?style=shield)](https://circleci.com/gh/unitiweb/express-microservice)
+[![Build Status](https://circleci.com/gh/unitiweb/express-microservice.svg?style=shield)](https://circleci.com/gh/unitiweb/express-microservice)
+[![Coverage Status](https://coveralls.io/repos/github/unitiweb/express-microservice/badge.svg?branch=add-badges)](https://coveralls.io/github/unitiweb/express-microservice?branch=add-badges)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
+[![NPM version](https://img.shields.io/npm/v/nyc.svg)](https://www.npmjs.com/package/nyc)
 
 ## unitiweb-express-microservice
 
