@@ -25,7 +25,7 @@ class Validators {
   }
 
   getValidator (endpointPath) {
-    if (Object.prototype.hasOwnProperty.call(this.list, endpointPath)) {
+    if (this.list.hasOwnProperty(endpointPath)) {
       return this.list[endpointPath]
     }
     return null
