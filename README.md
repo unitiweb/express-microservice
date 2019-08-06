@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/unitiweb/express-microservice.svg?style=sheild)](https://circleci.com/gh/unitiweb/express-microservice)
+[![CircleCI](https://circleci.com/gh/unitiweb/express-microservice.svg?style=shield)](https://circleci.com/gh/unitiweb/express-microservice)
 [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 ## unitiweb-express-microservice
