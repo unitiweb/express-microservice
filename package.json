@@ -8,7 +8,8 @@
     "standard": "node src/examples/standard/index.js",
     "test": "mocha 'test/**/*test.js'",
     "test:filter": "mocha",
-    "test:coverage": "nyc npm run test",
+    "test:coverage:local": "nyc npm run test",
+    "test:coverage": "nyc report --reporter=text-lcov | coveralls",
     "test:coverage:report": "nyc report --reporter=lcov --reporter=html && open ./coverage/index.html",
     "test:lint": "eslint src/**",
     "test:lint:fix": "eslint --fix src/**"
@@ -38,6 +39,7 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "coveralls": "^3.0.5",
     "eslint": "^6.1.0",
     "eslint-config-standard": "^13.0.1",
     "eslint-plugin-import": "^2.18.2",
