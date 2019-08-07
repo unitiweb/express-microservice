@@ -43,7 +43,7 @@ class Service {
         Object.getPrototypeOf(this)
       ),
       this
-    );
+    )
   }
 
   build () {
