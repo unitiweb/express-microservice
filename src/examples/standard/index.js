@@ -10,3 +10,5 @@ Service.config.init({
 })
 
 Service.listen()
+
+module.exports = Service

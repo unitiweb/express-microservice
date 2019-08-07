@@ -1,13 +1,13 @@
 {
   "name": "unitiweb-express-microservice",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "A simple microservice framework using express",
   "main": "src/index.js",
   "scripts": {
     "basic": "node src/examples/basic/index.js",
     "standard": "node src/examples/standard/index.js",
-    "test": "mocha 'test/**/*test.js'",
-    "test:filter": "mocha",
+    "test": "export NODE_ENV=testing && mocha 'test/**/*test.js'",
+    "test:filter": "export NODE_ENV=testing && mocha",
     "test:coverage": "nyc npm run test",
     "test:coverage:report": "nyc report --reporter=text-lcov | coveralls",
     "test:coverage:report:local": "nyc report --reporter=lcov --reporter=html && open ./coverage/index.html",

@@ -45,3 +45,5 @@ Service.endpoint.post('/get-user', async (res, data, context) => {
 })
 
 Service.listen()
+
+module.exports = Service

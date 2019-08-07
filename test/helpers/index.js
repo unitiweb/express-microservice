@@ -20,5 +20,6 @@ module.exports = {
       cfg = { basePath: '/base/path' }
     }
     return Service.newInstance(cfg)
-  },
+  }
+
 }

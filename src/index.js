@@ -37,6 +37,15 @@ class Service {
     return new Service(cfg)
   }
 
+  clone () {
+    return Object.assign(
+      Object.create(
+        Object.getPrototypeOf(this)
+      ),
+      this
+    );
+  }
+
   build () {
     this.validator.build()
     this.error.build()
@@ -46,11 +55,7 @@ class Service {
 
   listen (callback) {
     this.build()
-    if (NODE_ENV === 'testing') {
-      const server = this.app.listen(this.config.get('port'))
-      callback(this.app)
-      server.close()
-    } else {
+    if (NODE_ENV !== 'testing') {
       this.app.listen(this.config.get('port'), () => {
         const log = utils.logStatus(
           this.endpoint.list,
