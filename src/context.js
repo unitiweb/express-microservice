@@ -10,12 +10,8 @@ class Context {
     this.list.push({ name, module })
   }
 
-  get (name) {
-    const ctx = this.list.find(ctx => ctx.name === name)
-    if (!ctx) {
-      throw new Error('Tried to get context item that doesn\'t exists')
-    }
-    return ctx
+  deconstruct () {
+    return this.build()
   }
 
   build () {
