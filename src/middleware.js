@@ -25,7 +25,7 @@ class Middleware {
     this.add('addData', (req, res, next) => {
       res.data = (data, topLevel = 'data') => {
         const json = {}
-        json[topLevel] = data;
+        json[topLevel] = data
         res.json(json)
       }
       next()
