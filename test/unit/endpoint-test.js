@@ -179,5 +179,35 @@ describe('Service Endpoint', () => {
         done()
       })
     })
+    it('GET: proper default data wrapper', (done) => {
+      const service = Service.newInstance({ basePath: '/base/path' })
+      mockModule('/base/path/endpoints/healthCheck', (res, data, context) => {
+        res.data({ status: 'success' })
+      })
+      service.endpoint.get('/test-endpoint', 'healthCheck')
+      service.build()
+      request(service.app)
+      .get('/test-endpoint')
+      .expect(200)
+      .then(res => {
+        assert.deepEqual(res.body, { data: { status: 'success' } })
+        done()
+      })
+    })
+    it('GET: proper default custom wrapper', (done) => {
+      const service = Service.newInstance({ basePath: '/base/path' })
+      mockModule('/base/path/endpoints/healthCheck', (res, data, context) => {
+        res.data({ status: 'success' }, 'healthCheck')
+      })
+      service.endpoint.get('/test-endpoint', 'healthCheck')
+      service.build()
+      request(service.app)
+      .get('/test-endpoint')
+      .expect(200)
+      .then(res => {
+        assert.deepEqual(res.body, { healthCheck: { status: 'success' } })
+        done()
+      })
+    })
   })
 })

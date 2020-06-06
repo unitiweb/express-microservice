@@ -23,8 +23,10 @@ class Middleware {
     utils.loadFileIfExists(this.config.middleware())
 
     this.add('addData', (req, res, next) => {
-      res.data = (data) => {
-        res.json({ data })
+      res.data = (data, topLevel = 'data') => {
+        const json = {}
+        json[topLevel] = data
+        res.json(json)
       }
       next()
     })
