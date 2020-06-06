@@ -144,6 +144,12 @@ Service.endpoint.get('/health-check', async (res, data, context) => {
     message: 'This servcie is up and running'
   })
 })
+
+// NOTE: As of version 0.3.0 you can add a custom resopnse wrapper if you don't want the default of `data`
+  res.data({
+    code: 'Success',
+    message: 'This servcie is up and running'
+  }, 'healthCheck')
 ```
 
 As you can see the callback function has three arguments.
