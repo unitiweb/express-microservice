@@ -10,6 +10,10 @@ class Context {
     this.list.push({ name, module })
   }
 
+  deconstruct () {
+    return this.build()
+  }
+
   build () {
     utils.loadFileIfExists(this.config.context())
     const context = {}
