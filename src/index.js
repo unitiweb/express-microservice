@@ -46,7 +46,7 @@ class Service {
 
   listen () {
     this.build()
-    if (NODE_ENV !== 'testing') {
+    if (NODE_ENV && NODE_ENV !== 'testing') {
       this.app.listen(this.config.get('port'), () => {
         const log = utils.logStatus(
           this.endpoint.list,
